@@ -1,4 +1,3 @@
-
 // User related types
 export interface User {
   _id?: string;
@@ -24,6 +23,15 @@ export interface AuthState {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isLibrarian: boolean;
+}
+
+// For API responses that include user data without passwords
+export interface UserListItem {
+  _id: string;
+  name: string;
+  email: string;
+  role: "user" | "admin" | "librarian";
+  borrowedBooks: string[];
 }
 
 // Book related types

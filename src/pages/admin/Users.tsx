@@ -38,11 +38,11 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from 'sonner';
 import { usersApi } from '@/lib/api';
-import { User } from '@/types';
+import { UserListItem } from '@/types';
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserListItem[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<UserListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
