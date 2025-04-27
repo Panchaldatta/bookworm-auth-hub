@@ -9,9 +9,16 @@ import { Layout } from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import Home from "./pages/Home";
 import Books from "./pages/Books";
+import Search from "./pages/Search";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
+import BookDetail from "./pages/BookDetail";
+import AdminBooks from "./pages/admin/Books";
+import AdminUsers from "./pages/admin/Users";
+import UserProfile from "./pages/UserProfile";
+import MyBooks from "./pages/MyBooks";
+import BorrowingHistory from "./pages/BorrowingHistory";
 
 const queryClient = new QueryClient();
 
@@ -19,16 +26,21 @@ const queryClient = new QueryClient();
 interface ProtectedRouteProps {
   element: React.ReactNode;
   adminOnly?: boolean;
+  librarianOnly?: boolean;
 }
 
-const ProtectedRoute = ({ element, adminOnly = false }: ProtectedRouteProps) => {
-  const { isAuthenticated, isAdmin } = useAuth();
+const ProtectedRoute = ({ element, adminOnly = false, librarianOnly = false }: ProtectedRouteProps) => {
+  const { isAuthenticated, isAdmin, isLibrarian } = useAuth();
   
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
   
   if (adminOnly && !isAdmin) {
+    return <Navigate to="/" />;
+  }
+
+  if (librarianOnly && !isLibrarian) {
     return <Navigate to="/" />;
   }
   
@@ -56,10 +68,21 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/books" element={<Layout><Books /></Layout>} />
+      <Route path="/books/:id" element={<Layout><BookDetail /></Layout>} />
+      <Route path="/search" element={<Layout><Search /></Layout>} />
       <Route path="/login" element={<AuthRoute element={<Login />} />} />
       <Route path="/register" element={<AuthRoute element={<Register />} />} />
+      
+      {/* User protected routes */}
+      <Route path="/profile" element={<ProtectedRoute element={<Layout><UserProfile /></Layout>} />} />
+      <Route path="/my-books" element={<ProtectedRoute element={<Layout><MyBooks /></Layout>} />} />
+      
+      {/* Librarian protected routes */}
+      <Route path="/admin/books" element={<ProtectedRoute librarianOnly element={<Layout><AdminBooks /></Layout>} />} />
+      <Route path="/admin/users" element={<ProtectedRoute librarianOnly element={<Layout><AdminUsers /></Layout>} />} />
+      <Route path="/user/:id/history" element={<ProtectedRoute librarianOnly element={<Layout><BorrowingHistory /></Layout>} />} />
 
-      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

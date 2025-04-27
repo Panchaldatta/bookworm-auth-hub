@@ -5,7 +5,7 @@ export interface User {
   name: string;
   email: string;
   password: string;
-  role: "user" | "admin";
+  role: "user" | "admin" | "librarian";
   borrowedBooks: string[];
   createdAt?: Date;
   updatedAt?: Date;
@@ -15,7 +15,7 @@ export interface UserResponse {
   _id: string;
   name: string;
   email: string;
-  role: "user" | "admin";
+  role: "user" | "admin" | "librarian";
 }
 
 export interface AuthState {
@@ -23,6 +23,7 @@ export interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isLibrarian: boolean;
 }
 
 // Book related types
@@ -48,4 +49,27 @@ export interface BookFilters {
   author?: string;
   genre?: string;
   available?: boolean;
+}
+
+// Borrowing related types
+export interface BorrowRecord {
+  _id?: string;
+  bookId: string;
+  userId: string;
+  bookTitle: string;
+  userName: string;
+  borrowDate: Date;
+  dueDate: Date;
+  returnDate?: Date;
+  status: "active" | "returned" | "overdue";
+}
+
+// Member related types
+export interface Member {
+  _id: string;
+  name: string;
+  email: string;
+  role: "user";
+  borrowedBooks: string[];
+  borrowHistory: BorrowRecord[];
 }

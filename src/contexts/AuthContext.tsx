@@ -15,6 +15,7 @@ const initialAuthState: AuthState = {
   token: null,
   isAuthenticated: false,
   isAdmin: false,
+  isLibrarian: false,
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           token: savedToken,
           isAuthenticated: true,
           isAdmin: user.role === 'admin',
+          isLibrarian: user.role === 'librarian' || user.role === 'admin',
         };
       }
     } catch (error) {
@@ -81,6 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         token,
         isAuthenticated: true,
         isAdmin: user.role === 'admin',
+        isLibrarian: user.role === 'librarian' || user.role === 'admin',
       });
       
       toast({
@@ -120,6 +123,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         token,
         isAuthenticated: true,
         isAdmin: user.role === 'admin',
+        isLibrarian: user.role === 'librarian' || user.role === 'admin',
       });
       
       toast({

@@ -44,6 +44,17 @@ export const authApi = {
         return { user, token: "mock-token-user-456" };
       }
       
+      if (email === "librarian@library.com" && password === "librarian123") {
+        const user: UserResponse = {
+          _id: "librarian-id-789",
+          name: "Librarian User",
+          email: "librarian@library.com",
+          role: "librarian",
+        };
+        
+        return { user, token: "mock-token-librarian-789" };
+      }
+      
       return { error: "Invalid credentials" };
     } catch (error) {
       return handleApiError(error);
@@ -53,7 +64,7 @@ export const authApi = {
   async register(name: string, email: string, password: string) {
     try {
       // In production, this would be a real API call
-      if (email === "admin@library.com" || email === "user@library.com") {
+      if (email === "admin@library.com" || email === "user@library.com" || email === "librarian@library.com") {
         return { error: "This email is already in use" };
       }
       
@@ -275,6 +286,107 @@ export const booksApi = {
       };
       
       return { book: updatedBook };
+    } catch (error) {
+      return handleApiError(error);
+    }
+  },
+};
+
+// Mock users data for admin/librarian access
+const sampleUsers = [
+  {
+    _id: "user-id-456",
+    name: "Regular User",
+    email: "user@library.com",
+    role: "user",
+    borrowedBooks: ["2"],
+  },
+  {
+    _id: "user-id-789",
+    name: "Jane Doe",
+    email: "jane@example.com",
+    role: "user",
+    borrowedBooks: [],
+  },
+  {
+    _id: "admin-id-123",
+    name: "Admin User",
+    email: "admin@library.com",
+    role: "admin",
+    borrowedBooks: [],
+  },
+  {
+    _id: "librarian-id-789",
+    name: "Librarian User",
+    email: "librarian@library.com",
+    role: "librarian",
+    borrowedBooks: [],
+  },
+];
+
+// Mock user management API for librarians/admins
+export const usersApi = {
+  async getUsers() {
+    try {
+      return { users: sampleUsers };
+    } catch (error) {
+      return handleApiError(error);
+    }
+  },
+  
+  async getUserById(id: string) {
+    try {
+      const user = sampleUsers.find(u => u._id === id);
+      if (!user) {
+        return { error: "User not found" };
+      }
+      return { user };
+    } catch (error) {
+      return handleApiError(error);
+    }
+  },
+  
+  async updateUser(id: string, userData: Partial<User>) {
+    try {
+      const userIndex = sampleUsers.findIndex(u => u._id === id);
+      if (userIndex === -1) {
+        return { error: "User not found" };
+      }
+      
+      const updatedUser = { ...sampleUsers[userIndex], ...userData };
+      return { user: updatedUser };
+    } catch (error) {
+      return handleApiError(error);
+    }
+  },
+  
+  async deleteUser(id: string) {
+    try {
+      const userIndex = sampleUsers.findIndex(u => u._id === id);
+      if (userIndex === -1) {
+        return { error: "User not found" };
+      }
+      
+      return { success: true };
+    } catch (error) {
+      return handleApiError(error);
+    }
+  },
+  
+  async getUserBorrowingHistory(userId: string) {
+    try {
+      // In production, this would fetch the user's borrowing history
+      // For now, we'll just return the user's currently borrowed books
+      const user = sampleUsers.find(u => u._id === userId);
+      if (!user) {
+        return { error: "User not found" };
+      }
+      
+      const borrowedBooks = sampleBooks.filter(book => 
+        user.borrowedBooks.includes(book._id!)
+      );
+      
+      return { books: borrowedBooks };
     } catch (error) {
       return handleApiError(error);
     }
