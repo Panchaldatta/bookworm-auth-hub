@@ -26,7 +26,7 @@ const EditUser = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    role: '',
+    role: '' as "user" | "admin" | "librarian",
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const EditUser = () => {
           setFormData({
             name: userData.name,
             email: userData.email,
-            role: userData.role,
+            role: userData.role as "user" | "admin" | "librarian",
           });
         } else {
           toast.error('Failed to load user details');
@@ -66,7 +66,7 @@ const EditUser = () => {
   };
 
   const handleRoleChange = (value: string) => {
-    setFormData(prev => ({ ...prev, role: value }));
+    setFormData(prev => ({ ...prev, role: value as "user" | "admin" | "librarian" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,7 +75,12 @@ const EditUser = () => {
     if (!id) return;
     
     try {
-      const result = await usersApi.updateUser(id, formData);
+      const result = await usersApi.updateUser(id, {
+        name: formData.name,
+        email: formData.email,
+        role: formData.role as "user" | "admin" | "librarian",
+      });
+      
       if ('user' in result) {
         toast.success('User updated successfully');
         navigate('/admin/users');
