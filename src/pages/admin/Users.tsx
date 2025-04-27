@@ -52,8 +52,13 @@ const AdminUsers = () => {
       try {
         const result = await usersApi.getUsers();
         if ('users' in result) {
-          setUsers(result.users);
-          setFilteredUsers(result.users);
+          // Ensure the role is typed correctly
+          const typedUsers = result.users.map(user => ({
+            ...user,
+            role: user.role as "user" | "admin" | "librarian"
+          }));
+          setUsers(typedUsers);
+          setFilteredUsers(typedUsers);
         } else {
           toast.error('Failed to load users');
         }
@@ -209,7 +214,7 @@ const AdminUsers = () => {
                                   </DialogClose>
                                   <Button 
                                     variant="destructive" 
-                                    onClick={() => handleDeleteUser(user._id!)}
+                                    onClick={() => handleDeleteUser(user._id)}
                                   >
                                     Delete
                                   </Button>

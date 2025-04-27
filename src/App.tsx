@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import BookDetail from "./pages/BookDetail";
 import AdminBooks from "./pages/admin/Books";
 import AdminUsers from "./pages/admin/Users";
+import EditUser from "./pages/admin/EditUser"; // Add import for new component
 import UserProfile from "./pages/UserProfile";
 import MyBooks from "./pages/MyBooks";
 import BorrowingHistory from "./pages/BorrowingHistory";
@@ -80,6 +81,7 @@ const AppRoutes = () => {
       {/* Librarian protected routes */}
       <Route path="/admin/books" element={<ProtectedRoute librarianOnly element={<Layout><AdminBooks /></Layout>} />} />
       <Route path="/admin/users" element={<ProtectedRoute librarianOnly element={<Layout><AdminUsers /></Layout>} />} />
+      <Route path="/admin/users/edit/:id" element={<ProtectedRoute librarianOnly element={<Layout><EditUser /></Layout>} />} />
       <Route path="/user/:id/history" element={<ProtectedRoute librarianOnly element={<Layout><BorrowingHistory /></Layout>} />} />
 
       {/* Catch-all route */}
