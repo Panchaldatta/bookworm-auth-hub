@@ -37,8 +37,17 @@ const EditUser = () => {
         setIsLoading(true);
         const result = await usersApi.getUserById(id);
         if ('user' in result) {
+          // Ensure the role is properly typed when setting the user state
           const userData = result.user;
-          setUser(userData);
+          
+          // Create a properly typed user object
+          const typedUser: UserListItem = {
+            ...userData,
+            role: userData.role as "user" | "admin" | "librarian",
+            borrowedBooks: userData.borrowedBooks || []
+          };
+          
+          setUser(typedUser);
           setFormData({
             name: userData.name,
             email: userData.email,
