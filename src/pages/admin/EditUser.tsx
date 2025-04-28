@@ -75,7 +75,9 @@ const EditUser = () => {
   };
 
   const handleRoleChange = (value: string) => {
-    setFormData(prev => ({ ...prev, role: value as "user" | "admin" | "librarian" }));
+    // Explicitly cast the string to the union type
+    const role = value as "user" | "admin" | "librarian";
+    setFormData(prev => ({ ...prev, role }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,7 +89,7 @@ const EditUser = () => {
       const result = await usersApi.updateUser(id, {
         name: formData.name,
         email: formData.email,
-        role: formData.role as "user" | "admin" | "librarian",
+        role: formData.role,
       });
       
       if ('user' in result) {
